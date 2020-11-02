@@ -31,14 +31,13 @@ def get_county(id):
 #return average
 @app.route('/hi-summary-metrics', methods=['GET'])
 def get_average():
-	#county_dict = request.args
-	#counties = list(county_dict.values())
-	qstring = request.args.get("counties")
+	county_dict = request.args
+	counties = list(county_dict.values())
+	values = []
 
-	if(qstring):
-		counties = qstring.split(",")
-		values = []
-
+	if(len(counties) == 0):
+		return jsonify({"msg":"No arguments received"})
+	else:
 		for c in counties:
 			index = json_data.get(c)
 
@@ -47,22 +46,11 @@ def get_average():
 
 			values.append(index)
 
-		if len(values) > 1:
-			average = round(statistics.mean(values),1)
-			median  = round(statistics.median(values),1)
-			stdev = round(statistics.stdev(values),1)
-			hirange = round((max(values) - min(values)),1)
-			return jsonify({"average":average,"median":median,"stdev":stdev,"range":hirange})
-
-		else:
-			average = values[0]
-			median = values[0]
-			stdev = "NA"
-			hirange = "NA"
-			return jsonify({"average":average,"median":median,"stdev":stdev,"range":hirange})
-
-	else:
-		return jsonify({"msg":"No arguments received."})
+		average = round(statistics.mean(values),1)
+		median  = round(statistics.median(values),1)
+		stdev = round(statistics.stdev(values),1)
+		hirange = round((max(values) - min(values)),1)
+		return jsonify({"average":average,"median":median,"stdev":stdev,"range":hirange})
 		
 
 if __name__ == "__main__":
