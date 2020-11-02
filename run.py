@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, abort
+from flask import Flask, jsonify, abort, request
 import json
 
 app = Flask(__name__)
@@ -26,6 +26,28 @@ def get_county(id):
 		return jsonify({id:value})
 	else:
 		abort(404, description="Resource not found. That county does not exist.")
+
+#return average
+@app.route('/happiness-index/average', methods=['GET'])
+def get_average():
+	county_dict = request.args
+	counties = list(county_dict.values())
+
+	if(len(counties) == 0):
+		return jsonify({"msg":"No arguments received"})
+	else:
+		total = 0
+		for c in counties:
+			index = json_data.get(c)
+
+			if index == None:
+				abort(404, description="One or more arguments not found. " + c + " does not exist.")
+
+			total += index
+
+		average = total / len(counties)
+		return jsonify({"average":average})
+		
 
 if __name__ == "__main__":
 	app.run(debug=True)
