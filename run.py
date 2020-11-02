@@ -31,8 +31,6 @@ def get_county(id):
 #return average
 @app.route('/hi-summary-metrics', methods=['GET'])
 def get_metrics():
-	#county_dict = request.args
-	#counties = list(county_dict.values())
 	qstring = request.args.get("counties")
 
 	if(qstring):
